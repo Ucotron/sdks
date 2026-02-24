@@ -1,0 +1,70 @@
+plugins {
+    id 'java-library'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+dependencies {
+    api project(':ucotron-sdk')
+
+    // Spring Boot auto-configuration (provided — not bundled, user brings their own Spring)
+    compileOnly 'org.springframework.boot:spring-boot-autoconfigure:3.2.5'
+    compileOnly 'org.springframework.boot:spring-boot-configuration-processor:3.2.5'
+    compileOnly 'org.springframework:spring-context:6.1.6'
+
+    // Testing
+    testImplementation 'org.springframework.boot:spring-boot-autoconfigure:3.2.5'
+    testImplementation 'org.springframework.boot:spring-boot-test:3.2.5'
+    testImplementation 'org.springframework:spring-test:6.1.6'
+    testImplementation 'org.springframework:spring-context:6.1.6'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+    testImplementation 'org.assertj:assertj-core:3.25.3'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+// Generate configuration metadata for IDE support
+tasks.withType(JavaCompile) {
+    options.compilerArgs.add('-parameters')
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifactId = 'ucotron-spring-boot-starter'
+
+            pom {
+                name = 'Ucotron Spring Boot Starter'
+                description = 'Spring Boot auto-configuration for the Ucotron SDK'
+                url = 'https://github.com/ucotron-ai/ucotron'
+
+                licenses {
+                    license {
+                        name = 'MIT License'
+                        url = 'https://opensource.org/licenses/MIT'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id = 'ucotron'
+                        name = 'Ucotron Team'
+                        email = 'dev@ucotron.com'
+                    }
+                }
+
+                scm {
+                    connection = 'scm:git:git://github.com/ucotron-ai/ucotron.git'
+                    developerConnection = 'scm:git:ssh://github.com/ucotron-ai/ucotron.git'
+                    url = 'https://github.com/ucotron-ai/ucotron'
+                }
+            }
+        }
+    }
+}

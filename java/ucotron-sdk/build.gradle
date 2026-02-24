@@ -1,0 +1,87 @@
+plugins {
+    id 'java-library'
+    id 'jacoco'
+}
+
+group = 'com.ucotron'
+version = '0.1.0'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    api 'com.squareup.okhttp3:okhttp:4.12.0'
+    api 'com.google.code.gson:gson:2.10.1'
+
+    testImplementation platform('org.junit:junit-bom:5.10.2')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation 'com.squareup.okhttp3:mockwebserver:4.12.0'
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events 'passed', 'skipped', 'failed'
+    }
+}
+
+jacocoTestReport {
+    reports {
+        xml.required = true
+        html.required = false
+    }
+}
+
+test.finalizedBy jacocoTestReport
+
+jar {
+    manifest {
+        attributes(
+            'Implementation-Title': 'ucotron-sdk',
+            'Implementation-Version': project.version,
+            'Implementation-Vendor': 'Ucotron'
+        )
+    }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifactId = 'ucotron-sdk'
+
+            pom {
+                name = 'Ucotron SDK'
+                description = 'Java SDK for the Ucotron cognitive memory framework'
+                url = 'https://github.com/ucotron-ai/ucotron'
+
+                licenses {
+                    license {
+                        name = 'MIT License'
+                        url = 'https://opensource.org/licenses/MIT'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id = 'ucotron'
+                        name = 'Ucotron Team'
+                        email = 'dev@ucotron.com'
+                    }
+                }
+
+                scm {
+                    connection = 'scm:git:git://github.com/ucotron-ai/ucotron.git'
+                    developerConnection = 'scm:git:ssh://github.com/ucotron-ai/ucotron.git'
+                    url = 'https://github.com/ucotron-ai/ucotron'
+                }
+            }
+        }
+    }
+}

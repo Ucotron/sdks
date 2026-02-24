@@ -1,0 +1,58 @@
+// Root build file for Ucotron Java SDKs
+// Subprojects: ucotron-sdk (JVM), ucotron-sdk-android (Kotlin), ucotron-spring-boot-starter
+
+plugins {
+    id 'io.github.gradle-nexus.publish-plugin' version '2.0.0'
+}
+
+allprojects {
+    group = 'com.ucotron'
+    version = '0.1.0'
+
+    repositories {
+        mavenCentral()
+        google()
+    }
+}
+
+// Sonatype OSSRH staging repository (Maven Central)
+nexusPublishing {
+    repositories {
+        sonatype {
+            nexusUrl = uri('https://s01.oss.sonatype.org/service/local/')
+            snapshotRepositoryUrl = uri('https://s01.oss.sonatype.org/content/repositories/snapshots/')
+            username = findProperty('sonatypeUsername') ?: System.getenv('ORG_GRADLE_PROJECT_sonatypeUsername') ?: ''
+            password = findProperty('sonatypePassword') ?: System.getenv('ORG_GRADLE_PROJECT_sonatypePassword') ?: ''
+        }
+    }
+}
+
+subprojects {
+    apply plugin: 'maven-publish'
+    apply plugin: 'signing'
+
+    afterEvaluate {
+        // Ensure Java sources and javadoc JARs are published
+        if (plugins.hasPlugin('java-library') || plugins.hasPlugin('java')) {
+            java {
+                withSourcesJar()
+                withJavadocJar()
+            }
+        }
+
+        // GPG signing configuration (uses env vars in CI)
+        signing {
+            def signingKey = findProperty('signingKey') ?: System.getenv('ORG_GRADLE_PROJECT_signingKey')
+            def signingPassword = findProperty('signingPassword') ?: System.getenv('ORG_GRADLE_PROJECT_signingPassword')
+            if (signingKey) {
+                useInMemoryPgpKeys(signingKey, signingPassword)
+            }
+            sign publishing.publications
+        }
+    }
+
+    // Only sign when publishing to Maven Central (not local installs)
+    tasks.withType(Sign).configureEach {
+        onlyIf { gradle.taskGraph.hasTask('publishToSonatype') }
+    }
+}

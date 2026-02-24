@@ -1,0 +1,5 @@
+# Export-ignore files excluded from Packagist distribution archives
+/tests            export-ignore
+/phpunit.xml      export-ignore
+/.gitattributes   export-ignore
+/PUBLISHING.md    export-ignore

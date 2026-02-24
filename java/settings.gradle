@@ -1,0 +1,5 @@
+rootProject.name = 'ucotron-java'
+
+include 'ucotron-sdk'
+include 'ucotron-sdk-android'
+include 'ucotron-spring-boot-starter'
