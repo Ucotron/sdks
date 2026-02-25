@@ -1,6 +1,6 @@
 {
     "name": "ucotron/sdk",
-    "description": "Ucotron cognitive memory framework SDK for PHP",
+    "description": "Ucotron cognitive trust platform SDK for PHP",
     "type": "library",
     "license": "MIT",
     "homepage": "https://github.com/ucotron-ai/ucotron",
