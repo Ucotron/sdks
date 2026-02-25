@@ -1,7 +1,7 @@
 {
   "name": "@ucotron/sdk",
   "version": "0.1.0",
-  "description": "TypeScript SDK for Ucotron cognitive memory server",
+  "description": "TypeScript SDK for Ucotron cognitive trust server",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
