@@ -1,5 +1,7 @@
 """Error types for Ucotron SDK."""
 
+from __future__ import annotations
+
 
 class UcotronError(Exception):
     """Base exception for all Ucotron SDK errors."""
