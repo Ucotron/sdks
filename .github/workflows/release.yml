@@ -120,12 +120,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Notify Packagist
-        if: ${{ secrets.PACKAGIST_TOKEN != '' }}
+        env:
+          PACKAGIST_TOKEN: ${{ secrets.PACKAGIST_TOKEN }}
+          PACKAGIST_USERNAME: ${{ secrets.PACKAGIST_USERNAME }}
         run: |
-          curl -XPOST \
-            -H "Content-Type: application/json" \
-            "https://packagist.org/api/update-package?username=${{ secrets.PACKAGIST_USERNAME }}&apiToken=${{ secrets.PACKAGIST_TOKEN }}" \
-            -d '{"repository":{"url":"https://github.com/Ucotron/sdks"}}'
+          if [ -n "$PACKAGIST_TOKEN" ]; then
+            curl -XPOST \
+              -H "Content-Type: application/json" \
+              "https://packagist.org/api/update-package?username=${PACKAGIST_USERNAME}&apiToken=${PACKAGIST_TOKEN}" \
+              -d '{"repository":{"url":"https://github.com/Ucotron/sdks"}}'
+          else
+            echo "PACKAGIST_TOKEN not set, skipping Packagist notification"
+          fi
 
   github-release:
     name: GitHub Release
